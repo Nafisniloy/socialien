@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- <main> -->
+    <div class="container">
+        <div class="registration-container edit-profile">
+            <div class="registration-card">
+
+                <h2>Edit Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if custom_user.profile_pic %}
+                    <div class="profile-picture">
+                        <img id="nav-pro-pic2" src="{{ custom_user.profile_pic.url}}" alt="Profile Picture">
+                        <i onclick="openprofileimageselector2()" class="uil uil-image-edit "></i>
+                    </div>
+                    {% else %}
+                    <div class="profile-picture">
+                        <img id="nav-pro-pic2" src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                        <i onclick="openprofileimageselector2()" class="uil uil-image-edit "></i>
+                    </div>
+                    {% endif %}
+                    <input onchange="handleProfileImageInput2(event)" id="profile-img-input2" type="file" name="image" accept="image/*">
+
+                    <div class="about-item">
+                        <label for="bio">Bio</label>
+                        <textarea maxlength="100" id="bio" name="bio" class="form-control">{{ profile_user.bio }}</textarea>
+                    </div>
+                    <div class="about-item">
+                        <label for="location">Location</label>
+                        {% if profile_user.location != None %}
+                            <input  maxlength="80"   autocomplete="off" oninput="getlocationsuggestion(event)" type="text" id="location" name="location" class="form-control" value="{{ profile_user.location }}">
+                        {% else %}
+                            <input maxlength="80" autocomplete="off"  oninput="getlocationsuggestion(event)" type="text" id="location" name="location" class="form-control" placeholder="Enter your location">
+                        {% endif %}
+                        <div id="location-suggestions" class="location-suggestions">
+                            <ul id="location-list">
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="about-item">
+                        <label for="hobbies">Hobbies</label>
+                        <div class="hobbies-container">
+                                <div class="hobby-item">
+                                    <span>Reading</span>
+                                    <i onclick="removehobby(event)" class="uil uil-times"></i>
+                                </div>
+                                <div class="hobby-item">
+                                    <span>Writing</span>
+                                    <i onclick="removehobby(event)" class="uil uil-times"></i>
+                                </div>
+                                <div class="hobby-item">
+                                    <span>Coding</span>
+                                    <i onclick="removehobby(event)" class="uil uil-times"></i>
+                                </div>
+                            <!-- {% for hobby in profile_user.hobbies.all %}
+                                <div class="hobby-item">
+                                    <span>{{ hobby.name }}</span>
+                                    <i onclick="removehobby(event)" class="uil uil-times"></i>
+                                </div>
+                            {% endfor %} -->
+                        </div>
+                        <input maxlength="15" oninput="findhobbies(event)" autocomplete="off" type="text" id="hobbies" name="hobbies" class="form-control" value="{{ profile_user.hobbies }}">
+                        <div id="hobbies-suggestions" class="hobbies-suggestions">
+                            <ul id="hobbies-list">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="about-item">
+                        <label for="contact_info">Contact Info</label>
+                        <input autocomplete="off" type="text" id="contact_info" name="contact_info" class="form-control" value="{{ profile_user.contact_info }}">
+                    </div>
+                    <div class="about-item">
+                        <label for="profile_pic">Profile Picture</label>
+                        <input type="file" id="profile_pic" name="profile_pic" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- </main> -->
+
+{% endblock %}

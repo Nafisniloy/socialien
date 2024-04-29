@@ -1,0 +1,99 @@
+{% load static %}
+{% if request.user.is_authenticated %}
+
+
+<nav id="nav">
+    <div class="container nav-container">
+           <a href="/" class="logo">
+        <h3  >Social<span>ien</span></h3>
+           </a>
+    <div class="search-bar">
+        <!-- <i class="fa fa-search"></i> -->
+        <i class="uil uil-search"></i>
+        
+        <input type="search" placeholder="Search for friends">
+    </div>
+    <div class="create">
+        <label class="btn btn-primary" for="create-post">Add Post</label>
+        <div class="mobile-search-icon">
+            <i class="uil uil-search" id="search-icon"></i>
+        </div>
+        {% if custom_user.profile_pic %}
+
+        <div class="profile-picture"id="profile-picture">
+            <img src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+        </div>
+        {% else %}
+        <div class="profile-picture"id="profile-picture">
+            <img src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">
+        </div>
+        {% endif %} 
+    </div>
+   
+    </div>
+ 
+</nav>
+<div id="modal-search" class="modal">
+    <div class="modal-content">
+        <!-- <span class="close">&times;</span> -->
+        <input type="text" placeholder="Search for friends">
+        <div>
+
+            <i class="uil uil-search search-btn"></i>
+            <i class="uil uil-times close"></i>
+        </div>
+        <!-- Add other search functionalities here -->
+    </div>
+</div>
+
+
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-user-content">
+            <!-- Add content for profile modal here -->
+            <h2>User Profile</h2>
+            {% if custom_user.profile_pic %}
+            <div class="profile-picture">
+                <img id="nav-pro-pic" src="{{ custom_user.profile_pic.url}}" alt="Profile Picture">
+                <i onclick="openprofileimageselector()" class="uil uil-image-edit "></i>
+            </div>
+            {% else %}
+            <div class="profile-picture">
+                <img id="nav-pro-pic" src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                <i onclick="openprofileimageselector()" class="uil uil-image-edit "></i>
+            </div>
+            {% endif %}
+            <form id="propic-update-action-btns" method="POST" enctype="multipart/form-data" action="{% url 'updatepropic' %}">
+
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <input onchange="handleProfileImageInput(event)" id="profile-img-input" type="file" name="image" accept="image/*">
+                <button type="submit" id="propic-update-btn" class="btn btn-primary">Update</button>
+                <button type="button" onclick="reload()" id="propic-cancel-btn" class="btn btn-danger">Cancel</button>
+            </form>
+            <h3>{{ custom_user.name }}</h3>
+            <small >{{ custom_user.bio }}</small>
+            <!-- Example content -->
+            <div class="action-btns">
+                {% if not 'Profile' in title%}
+                <a href="profile/@{{custom_user.handle}}" id="edit-profile" class="btn btn-black">Visit Profile</a>
+                {% endif %} 
+               
+            </div>
+        </div>
+        <div>
+            <i class="uil uil-times close"></i>
+        </div>
+    </div>
+</div>
+
+{% else %}  
+
+<nav class="nav">
+    <div style="text-align:center;align-items: center;justify-content: center;" class="container nav-container">
+        <div style="text-align:center;" class="logo">
+     <h3 style="text-align:center;font-size: 2rem;">Social<span>ien</span></h3>
+        </div>
+ </div>
+</nav>
+
+{% endif %}

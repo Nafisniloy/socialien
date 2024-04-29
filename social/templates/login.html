@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- use css classes from registration.html -->
+<div class="container">
+    <div class="login-container">
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+             <div class="alert-error">
+                {{ message }}
+             </div>
+             {% else %}
+             <div class="alert">
+                {{ message }}
+             </div>
+        {% endif %}
+          {% endfor %}
+       
+    {% endif %}
+        <div  class="registration-card">
+            <h2>Login</h2>
+            <form class="registration-form" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input required type="text" class="form-control" id="email" name="username" placeholder="Enter username">
+                </div>
+                <div class="form-group mt-3">
+                    <label for="password">Password</label>
+                    <input required type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Login</button>
+                <p style="text-align: center;">or</p>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

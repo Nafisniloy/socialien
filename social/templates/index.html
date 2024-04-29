@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <div class="left">
+            <a class="profile">
+                {% if custom_user.profile_pic %}
+                <div class="profile-picture">
+                    <img class="profile-picture" src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+                </div>
+                {% else %}
+                <div class="profile-picture">
+                    <img src="/static/images/default-{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                </div>
+                {% endif %}
+                <div class="handle">
+                    <h4>{{ custom_user.name}}</h4>
+                    <p class="text-muted">@{{ custom_user.handle}}</p>
+                </div>
+            </a>
+            <div class="sidebar">
+                <a style="border-top-left-radius: var(--card-border-radius); overflow: hidden;"
+                    class="menu-item active">
+
+                    <span><i class="uil uil-home"></i></span>
+                    <h3>Home</h3>
+                </a>
+
+                <a class="menu-item" id="notifications">
+                    <span><i class="uil uil-bell"><small class="notification-count">3</small></i></span>
+                    <h3>Notifications</h3>
+                    <!-- notification popup -->
+                    <div class="notifications-popup ">
+                        <div>
+                            <div class="profile-picture">
+                                <img class="profile-picture" src="{% static 'images/profile-2.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>John Doe</strong> liked your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-3.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>Sadman</strong> reacted your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-4.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>Niloy</strong> reacted your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="menu-item" id="messages-notifications">
+                    <span><i class="uil uil-envelope-alt"><small class="notification-count">3</small></i></span>
+                    <h3>Messages</h3>
+                </a>
+                <a class="menu-item">
+                    <span><i class="uil uil-bookmark"></i></span>
+                    <h3>Bookmarks</h3>
+                </a>
+              
+                <a class="menu-item">
+                    <span><i class="uil uil-setting"></i></span>
+                    <h3>Settings</h3>
+                </a>
+            </div>
+            <label for="create-post" class="btn btn-primary">Create Post</label>
+        </div>
+        <div class="middle">
+            <!-- stories -->
+            <!-- <div class="story-container">
+
+                <div class="stories">
+                   <div class="story">
+    
+                        {% if custom_user.profile_pic %}
+                        <div class="profile-picture">
+                            <img src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+                        </div>
+                        {% else %}
+                        <div class="profile-picture">
+                            <img src="/static/images/default-{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                        </div>
+                        {% endif %}
+                        <p class="name">Your story</p>
+                    </div>
+                    <div class="story" data-url="/static/images/default-{{ custom_user.gender }}.jpg">
+    
+                        <div class="profile-picture">
+                            <img src="{% static 'images/profile-7.jpg' %}" alt="">
+    
+                        </div>
+                        <p class="name">Niloy</p>
+                    </div>
+                    <div class="story">
+    
+                        <div class="profile-picture">
+                            <img class="profile-picture" src="{% static 'images/profile-6.jpg' %}" alt="">
+                        </div>
+                        <p class="name">Anny wan</p>
+                    </div>
+                    
+                    <div class="story">
+    
+                        <div class="profile-picture">
+                            <img src="{% static 'images/profile-6.jpg' %}" alt="">
+                        </div>
+                        <p class="name">Anny wan</p>
+                    </div>
+                    
+                  
+                </div>
+            </div>
+       -->
+            <!-- end of story -->
+            <form action="" class="create-post">
+                {% if custom_user.profile_pic %}
+                <div class="profile-picture">
+                    <img  src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+                </div>
+                {% else %}
+                <div class="profile-picture">
+                    <img  src="/static/images/default-{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                </div>
+                {% endif %}
+                <input type="text" placeholder="What's on your mind, {{custom_user}}?" id="create-post">
+                <!-- <button type="submit" class="btn btn-primary">Post</button> -->
+            </form>
+            <div id="postModal" class="modal">
+                <div class="modal-content">
+                    <div class="post-content">
+
+                        <h4>Create Post</h4>
+                        <form enctype="multipart/form-data"   class="input-section" method="POST" action="{% url 'createpost' %}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <textarea required id="post-upload-text" name="text" placeholder="What's on your mind?"></textarea>
+                            <i onclick="openimageinput()" class="uil uil-image-plus"></i>
+                            <input name="image" onchange="handleImageInput(event)" id="img-input" type="file" accept="image/*">
+                            <button id="post-submit" hidden type="submit"></button>
+                        </form>
+                        <div id="img-preview-div">
+                            <h5>Preview</h5>
+                            <div class="preview-image">
+                                <img src="" alt="" id="post-image-preview">
+                                <i onclick="removeSelectedImage()" class="uil uil-times close"></i>
+                                
+                            </div>
+                        </div>
+                        <button onclick="submitpost()" type="button" class="btn btn-primary">Post</button>
+                    </div>
+                    <i id="post-modal-close" class="uil uil-times close"></i>
+
+                </div>
+            </div>
+            <!-- feed -->
+            <div id="feeds" class="feeds">
+                {% include 'posts.html'%}
+               
+                <!-- <div class="feed">
+                    <div class="head">
+                        <div class="user">
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-6.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="ingo">
+                                <h3>John Doe</h3>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <span class="edit">
+                            <i class="uil uil-ellipsis-h"></i>
+                        </span>
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/feed-2.jpg' %}" alt="Post">
+                    </div>
+                    <div class="action-button">
+                        <div class="interaction-butttons">
+                    <span><i class="uil uil-heart"></i></span>
+                    <span><i class="uil uil-comment"></i></span>
+                    <span><i class="uil uil-share-alt"></i></span>
+                        </div>
+                        <div class="bookmark">
+                            <span><i class="uil uil-bookmark"></i></span>
+                        </div>
+                    </div>
+                    <div class="liked-by">
+                        <span><img src="{% static 'images/feed-2.jpg' %}" alt=""></span>
+                        <span><img src="{% static 'images/feed-3.jpg' %}" alt=""></span>
+                        <span><img src="{% static 'images/feed-5.jpg' %}" alt=""></span>
+                        <p>liked by <strong>John Doe</strong> and <strong>2 others</strong></p>
+                    </div>
+                    <div class="caption">
+                        <p>
+                          <b>John</b>  Be your own reason to smile <span class="hash-tag"> #lifestyle </span>
+                        </p>
+                    </div>
+                    <div class="comments text-muted">View all 4 comments</div>
+                </div>
+                <div class="feed">
+                    <div class="head">
+                        <div class="user">
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-4.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="ingo">
+                                <h3>Alan Walker</h3>
+                                <small>3 hours ago</small>
+                            </div>
+                        </div>
+                        <span class="edit">
+                            <i class="uil uil-ellipsis-h"></i>
+                        </span>
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/feed-5.jpg' %}" alt="Post">
+                    </div>
+                    <div class="action-button">
+                        <div class="interaction-butttons">
+                    <span><i class="uil uil-heart"></i></span>
+                    <span><i class="uil uil-comment"></i></span>
+                    <span><i class="uil uil-share-alt"></i></span>
+                        </div>
+                        <div class="bookmark">
+                            <span><i class="uil uil-bookmark"></i></span>
+                        </div>
+                    </div>
+                    <div class="liked-by">
+                        <span><img src="{% static 'images/feed-2.jpg' %}" alt=""></span>
+                        <span><img src="{% static 'images/feed-3.jpg' %}" alt=""></span>
+                        <span><img src="{% static 'images/feed-5.jpg' %}" alt=""></span>
+                        <p>liked by <strong>John Doe</strong> and <strong>2 others</strong></p>
+                    </div>
+                    <div class="caption">
+                        <p>
+                          <b>John</b>  Be your own reason to smile <span class="hash-tag"> #lifestyle </span>
+                        </p>
+                    </div>
+                    <div class="comments text-muted">View all 4 comments</div>
+                </div> -->
+            </div>
+            <div id="loadmore" class="load-more">
+ 
+                <button data-post_count="10" onclick="loadmore(event)" class="btn btn-primary">Load more</button>
+            </div> 
+        </div>
+        <div class="right">
+            <div class="messages">
+                <div class="heading">
+                    <h4>Messages</h4>
+                    <i class="uil uil-edit"></i>
+                </div>
+                <!-- search bar -->
+                <div class="search-bar">
+                    <i class="uil uil-search"></i>
+                    <input type="search" id="message-search" placeholder="Search">
+                </div>
+                <!-- end of search bar -->
+                <!-- <div class="category">
+                    <h6 class="active">Primar</h6>
+                </div> -->
+                <div class="message">
+                    <div class="profile-picture">
+                        <img src="{% static 'images/profile-2.jpg' %}" alt="Profile Picture">
+                    </div>
+                    <div class="message-body">
+                        <h5>John Doe</h5>
+                        <p class="text-muted"> Hey, how are you?</p>
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="profile-picture">
+                        <img src="{% static 'images/profile-3.jpg' %}" alt="Profile Picture">
+                        <div class="active"></div>
+                    </div>
+                    <div class="message-body">
+                        <h5>Nafis</h5>
+                        <p class="text-muted">Hello, there</p>
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="profile-picture">
+                        <img src="{% static 'images/profile-4.jpg' %}" alt="Profile Picture">
+                    </div>
+                    <div class="message-body">
+                        <h5>Niloy</h5>
+                        <p class="text-muted"> hi </p>
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="profile-picture">
+                        <img src="{% static 'images/profile-2.jpg' %}" alt="Profile Picture">
+                    </div>
+                    <div class="message-body">
+                        <h5>John Doe</h5>
+                        <p class="text-muted"> Hey, how are you?</p>
+                    </div>
+                </div>
+            </div>
+                <!-- friend request -->
+                <div class="friend-request">
+                    <h4>Requests</h4>
+                    <div class="request">
+                        <div class="info">
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-4.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="request-info">
+                                <h5>Navi</h5>
+                                <small class="text-muted">3 mutual friends</small>
+                            </div>
+                        </div>
+                        <div class="action">
+                            <button class="btn btn-primary">
+                            Accept
+                            </button>
+                            <button class="btn btn-secondary">
+                            Decline
+                            </button>
+                        </div>
+                    </div>
+                    <div class="request">
+                        <div class="info">
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-3.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="request-info">
+                                <h5>Sadman</h5>
+                                <small class="text-muted">2 mutual friends</small>
+                            </div>
+                        </div>
+                        <div class="action">
+                            <button class="btn btn-primary">
+                            Accept
+                            </button>
+                            <button class="btn btn-secondary">
+                            Decline
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</main>
+ 
+
+{% endblock %}

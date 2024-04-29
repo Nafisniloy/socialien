@@ -1,0 +1,156 @@
+{%load static%}
+
+{% for post in posts %}
+
+    <div class="feed">
+        <div class="head">
+            <div class="user">
+                <input hidden type="text" value="post_id" id="post_id">
+                {% if post.profile_pic %}
+                <div class="profile-picture">
+                    <img class="profile-picture" src="{{ post.profile_pic }}" alt="Profile Picture">
+                </div>
+                {% else %}
+                <div class="profile-picture">
+                    <img src="{% static 'images/default-' %}{{ post.gender }}.jpg" alt="Profile Picture">
+                </div>
+                {% endif %}
+                <div class="ingo">
+                    <h3>{{ post.user }}</h3>
+                    <small>{{ post.date }}</small>
+                </div>
+            </div>
+            <span class="edit">
+                <i class="uil uil-ellipsis-h"></i>
+            </span>
+        </div>
+        <div class="caption">
+            <p>
+                <!-- Post text -->
+                <!-- <b>{{ post.user }}</b>  -->
+                {{ post.text }} <span class="hash-tag">  </span>
+            </p>
+        </div>
+        {% if post.image %}
+        <div class="photo">
+            <img src="{{ post.image }}" alt="Post">
+        </div>
+      
+        {% endif %}
+        <div class="counts" >
+            <div class="likes">
+                <span><i class="uil uil-heart" ></i></span>
+                <span id="likes-{{post.post_id}}">{{ post.likes }}</span>
+            </div>
+            <div data-postId="{{post.post_id}}" onclick="opencomments(event)" class="comments">
+                <span id="comment-count-{{post.post_id}}" >{{ post.comment_count }}</span>
+                <span ><i class="uil uil-comment"></i></span>
+            </div>
+        </div>
+        <hr class="devider">
+        <div class="action-button">
+            <div class="interaction-butttons">
+                {% if post.liked %}
+                <span data-postId="{{post.post_id}}" ><i onclick="handlelike(event)" class="fa-solid fa-heart" style="color: #ff0000;" data-postId="{{post.post_id}}" ></i></span>
+                {% else %}
+                <span data-postId="{{post.post_id}}" ><i onclick="handlelike(event)" class="uil uil-heart" data-postId="{{post.post_id}}" ></i></span>
+                {% endif %}
+                <!-- <span><i class onclick="handledislike(event)" class="fa-solid fa-heart" style="color: #000000;"></i></span> -->
+               
+                <span data-postId="{{post.post_id}}" onclick="opencomments(event)"><i class="uil uil-comment"></i></span>
+                <span><i class="uil uil-share-alt"></i></span>
+            </div>
+            <div class="bookmark">
+                <span><i class="uil uil-bookmark"></i></span>
+            </div>
+        </div>
+
+        <div class="liked-by">
+            <!-- Liked by section -->
+            <!-- {% for user in post.liked_by %}
+            <span><img src="{{ user.profile_pic.url }}" alt="{{ user.name }}"></span>
+            {% endfor %}
+            {% if post.liked_by.count > 0 %}
+            <p>liked by <strong>{{ post.liked_by.first.name }}</strong> 
+                {% if post.liked_by.count > 1 %}
+                and <strong>{{ post.comment_count }} others</strong>
+                {% endif %}
+            </p>
+            {% else %}
+            <p>No likes yet</p>
+            {% endif %} -->
+            <!-- <span><img src="{% static 'images/feed-2.jpg' %}" alt=""></span>
+            <span><img src="{% static 'images/feed-3.jpg' %}" alt=""></span>
+            <span><img src="{% static 'images/feed-5.jpg' %}" alt=""></span>
+            <p>liked by <strong>John Doe</strong> and <strong>2 others</strong></p> -->
+        </div>
+        
+<!--     
+        <div onclick="opencomment()" class="comments text-muted">View all {{ post.comment_count }} comments</div> -->
+
+        <!-- add comment -->
+    <div class="comment-section">
+     <div id="comments-{{post.post_id}}" class="all-comments">
+
+         {% for comment in post.comments %}
+         {% if comment.post_id == post.post_id %}
+         <div class="comment">
+             <div class="user">
+                 {% if comment.profile_pic %}
+                 <div class="profile-picture">
+                     <img src="{{ comment.profile_pic }}" alt="Profile Picture">
+                 </div>
+                 {% else %}
+                 <div class="profile-picture">
+                     <img src="{% static 'images/default-' %}{{ comment.gender }}.jpg" alt="Profile Picture">
+                 </div>
+                 {% endif %}
+             </div>
+                 <div class="info">
+                     <h3>{{ comment.user }}  <small>-{{comment.date}}</small></h3>
+                     <p>{{ comment.text }}</p>
+                 </div>
+         
+         </div>
+         {% endif %}
+         {% endfor %}
+     </div>   
+        <div class="add-comment">
+            {% if custom_user.profile_pic %}
+            <div class="profile-picture">
+                <img src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+            </div>
+            {% else %}
+            <div class="profile-picture">
+                <img src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">    
+            </div>
+            {% endif %}
+            <form class="comment-form" method="POST" action="{% url 'comment_post' %}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <input type="hidden" name="post_id" value="{{ post.post_id }}">
+                <button data-postId="{{post.post_id}}"  onclick="openemojipicker(event)" type="button" class="emoji-button" ><i class="fa-solid fa-face-smile "></i></button>
+                <input id="comment-{{post.post_id}}" type="text" required name="text" placeholder="Add a comment">
+                <button data-postId="{{post.post_id}}"  type="submit"  ><i class="uil uil-message"></i></button>
+            </form>
+            <div  id="emoji-picker-{{post.post_id}}" class=" emoji-picker-container">
+            </div>
+            <!-- send icon -->
+            
+        </div>
+        
+        {% if comments %}
+        {% endif %}
+    </div>
+
+                
+    </div>
+    
+
+
+
+
+
+
+
+
+{% endfor %}

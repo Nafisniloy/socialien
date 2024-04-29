@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static%}
+
+{% block content %}
+<div class="container">
+    <div class="registration-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!-- <div class="alert">
+            This is an alert message.
+        </div> -->
+        <div class="registration-card">
+            <h2>Create your account</h2>
+            <form class="registration-form" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Username</label>
+                    <input onchange="handlechange(event)" required type="text" class="form-control" id="name" name="name" placeholder="Enter username">
+                    <small id="handleshown"></small>
+                </div>
+                <input type="hidden" id="handle" name="handle" value="">
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input required type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <!-- date of birth -->
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input required type="date" class="form-control" id="dob" name="date_of_birth" placeholder="Enter Date of Birth">
+                </div>
+                <!-- add gender option here  -->
+                <div class="form-group">
+                    <label>Gender</label><br>
+                     <div class="genders">
+                         <input type="radio" id="male" name="gender" value="male">
+                         <label for="male">Male</label><br>
+                         <input type="radio" id="female" name="gender" value="female">
+                         <label for="female">Female</label><br>
+                       
+                     </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input required type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input required type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p style="text-align: center;">or</p>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+

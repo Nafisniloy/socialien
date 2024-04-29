@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+<main>
+    <div class="profile-container">
+
+        <div class="profile">
+            <div class="profile-picture">
+                {% if profile_user.profile_pic %}
+                <img src="{{ profile_user.profile_pic.url }}" alt="Profile Picture">
+                {% else %}
+                <img src="/static/images/default-{{profile_user.gender}}.jpg" alt="Profile Picture">
+                {% endif %}
+            </div>
+            {% if custom_user == profile_user %}
+            <div class="edit-details-button">
+                <a href="{% url 'editprofile' %}" class="btn btn-light">
+                    <i class="uil uil-edit"></i> Edit Profile</a>
+            </div>
+            {% endif %}
+            <div class="profile-info">
+                <h2>{{ profile_user.name }}</h2>
+                <small style="text-align: center; margin: auto; display: block; margin-top: 0;margin-bottom: 0.5rem;"
+                    class="text-muted">@{{ profile_user.handle }}</small>
+
+                <p>{{ profile_user.bio }}</p>
+                <hr style="margin-top: 0.7rem; margin-bottom: 0.5rem;" class="devider">
+                <div class="profile-about">
+
+                    <h3>About</h3>
+                    <div class="about-grid">
+                        <div class="about-item">
+                            <h5>Location</h5>
+                            {% if profile_user.location %}
+                            <p>{{ profile_user.location }}</p>
+                            {% else %}
+                            <p>Not set</p>
+                            {% endif %}
+                        </div>
+                        <div class="about-item">
+                            <h5>Gender</h5>
+                            {% if profile_user.gender == "male" %}
+                            <p>Male</p>
+                            {% else %}
+                            <p>Female</p>
+                            {% endif %}
+                        </div>
+                        <div class="about-item">
+                            <h5>Birthdate</h5>
+                            {% if profile_user.date_of_birth %}
+
+                            <p>{{profile_user.date_of_birth}}</p>
+                            {% else %}
+                            <p>Not set</p>
+                            {% endif %}
+                        </div>
+                        <div class="about-item">
+                            <h5>Hobbies</h5>
+                            {% if profile_user.hobbies %}
+                            <p>{{profile_user.hobbies}}</p>
+                            {% else %}
+                            <p>Not set</p>
+                            {% endif %}
+                        </div>
+                        <div class="about-item">
+
+                            <h5>Contact Info</h5>
+                            {% if profile_user.contact_info %}
+                            <p>{{profile_user.contact_info}}</p>
+                            {% else %}
+                            <p>Not set</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="container">
+
+
+        <div class="left">
+            <a class="profile">
+                {% if custom_user.profile_pic.url %}
+                <div class="profile-picture">
+                    <img class="profile-picture" src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+                </div>
+                {% else %}
+                <div class="profile-picture">
+                    <img src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                </div>
+                {% endif %}
+                <div class="handle">
+                    <h4>{{ custom_user.name}}</h4>
+                    <p class="text-muted">@{{ custom_user.handle}}</p>
+                </div>
+            </a>
+            <div class="sidebar">
+                <a style="border-top-left-radius: var(--card-border-radius); overflow: hidden;"
+                    class="menu-item active">
+
+                    <span><i class="uil uil-home"></i></span>
+                    <h3>Home</h3>
+                </a>
+
+                <a class="menu-item" id="notifications">
+                    <span><i class="uil uil-bell"><small class="notification-count">3</small></i></span>
+                    <h3>Notifications</h3>
+                    <!-- notification popup -->
+                    <div class="notifications-popup ">
+                        <div>
+                            <div class="profile-picture">
+                                <img class="profile-picture" src="{% static 'images/profile-2.jpg' %}"
+                                    alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>John Doe</strong> liked your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-3.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>Sadman</strong> reacted your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="profile-picture">
+                                <img src="{% static 'images/profile-4.jpg' %}" alt="Profile Picture">
+                            </div>
+                            <div class="notification-body">
+                                <p><strong>Niloy</strong> reacted your post</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a class="menu-item" id="messages-notifications">
+                    <span><i class="uil uil-envelope-alt"><small class="notification-count">3</small></i></span>
+                    <h3>Messages</h3>
+                </a>
+                <a class="menu-item">
+                    <span><i class="uil uil-bookmark"></i></span>
+                    <h3>Bookmarks</h3>
+                </a>
+
+                <a class="menu-item">
+                    <span><i class="uil uil-setting"></i></span>
+                    <h3>Settings</h3>
+                </a>
+            </div>
+            <label for="create-post" class="btn btn-primary">Create Post</label>
+        </div>
+        <div class="middle">
+            <div id="profile-top">
+                <div class="profile-picture">
+                    {% if profile_user.profile_pic %}
+                    <img src="{{ profile_user.profile_pic.url }}" alt="Profile Picture">
+                    {% else %}
+                    <img src="/static/images/default-{{profile_user.gender}}.jpg" alt="Profile Picture">
+                    {% endif %}
+                </div>
+                {% if custom_user == profile_user %}
+                <div class="edit-details-button">
+                    <a href="{% url 'editprofile' %}" class="btn btn-light">
+                        <i class="uil uil-edit"></i> Edit</a>
+                </div>
+                {% endif %}
+                <div class="profile-info">
+                    <h2>{{ profile_user.name }}</h2>
+                    <small
+                        style="text-align: center; margin: auto; display: block; margin-top: 0;margin-bottom: 0.5rem;"
+                        class="text-muted">@{{ profile_user.handle }}</small>
+
+                    <p>{{ profile_user.bio }}</p>
+                    <hr style="margin-top: 0.7rem; margin-bottom: 0.5rem;" class="devider">
+                    <div class="profile-about">
+
+                        <h3>About</h3>
+                        <div class="about-grid">
+                            <div class="about-item">
+                                <h5>Location</h5>
+                                {% if profile_user.location %}
+                                <p>{{ profile_user.location }}</p>
+                                {% else %}
+                                <p>Not set</p>
+                                {% endif %}
+                            </div>
+                            <div class="about-item">
+                                <h5>Gender</h5>
+                                {% if profile_user.gender == "male" %}
+                                <p>Male</p>
+                                {% else %}
+                                <p>Female</p>
+                                {% endif %}
+                            </div>
+                            <div class="about-item">
+                                <h5>Birthdate</h5>
+                                {% if profile_user.date_of_birth %}
+
+                                <p>{{profile_user.date_of_birth}}</p>
+                                {% else %}
+                                <p>Not set</p>
+                                {% endif %}
+                            </div>
+                            <div class="about-item">
+                                <h5>Hobbies</h5>
+                                {% if profile_user.hobbies %}
+                                <p>{{profile_user.hobbies}}</p>
+                                {% else %}
+                                <p>Not set</p>
+                                {% endif %}
+                            </div>
+                            <div class="about-item">
+
+                                <h5>Contact Info</h5>
+                                {% if profile_user.contact_info %}
+                                <p>{{profile_user.contact_info}}</p>
+                                {% else %}
+                                <p>Not set</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="photos-container-mobile">
+                <h3>Photos</h3>
+                <div class="photos">
+                    <div class="photo">
+                        <img src="{% static 'images/profile-1.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-2.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-3.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-4.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-5.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-6.jpg' %}" alt="Photo">
+                    </div>
+                </div>
+                <a style="margin-top: 0.5rem;" class="btn btn-primary">View all</a>
+            </div>
+            <div class="friends-container-mobile">
+                <h3>Friends</h3>
+                <div class="friends">
+                    <a class="friend">
+                        <img src="{% static 'images/profile-7.jpg' %}" alt="Friend">
+                        <p>John Doe</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-8.jpg' %}" alt="Friend">
+                        <p>Nafis Niloy</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-9.jpg' %}" alt="Friend">
+                        <p>Sadman Sakib</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-10.jpg' %}" alt="Friend">
+                        <p>John Abraham</p>
+                    </a>
+
+                </div>
+
+            </div>
+            {% if custom_user == profile_user %}
+            <form action="" class="create-post">
+                {% if custom_user.profile_pic.url %}
+                <div class="profile-picture">
+                    <img src="{{ custom_user.profile_pic.url }}" alt="Profile Picture">
+                </div>
+                {% else %}
+                <div class="profile-picture">
+                    <img src="{% static 'images/default-' %}{{ custom_user.gender }}.jpg" alt="Profile Picture">
+                </div>
+                {% endif %}
+                <input type="text" placeholder="What's on your mind, {{custom_user}}?" id="create-post">
+                <!-- <button type="submit" class="btn btn-primary">Post</button> -->
+            </form>
+            {% endif %}
+                 <div id="postModal" class="modal">
+                <div class="modal-content">
+                    <div class="post-content">
+
+                        <h4>Create Post</h4>
+                        <form enctype="multipart/form-data" class="input-section" method="POST"
+                            action="{% url 'createpost' %}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <textarea required id="post-upload-text" name="text"
+                                placeholder="What's on your mind?"></textarea>
+                            <i onclick="openimageinput()" class="uil uil-image-plus"></i>
+                            <input name="image" onchange="handleImageInput(event)" id="img-input" type="file"
+                                accept="image/*">
+                            <button id="post-submit" hidden type="submit"></button>
+                        </form>
+                        <div id="img-preview-div">
+                            <h5>Preview</h5>
+                            <div class="preview-image">
+                                <img src="" alt="" id="post-image-preview">
+                                <i onclick="removeSelectedImage()" class="uil uil-times close"></i>
+
+                            </div>
+                        </div>
+                        <button onclick="submitpost()" type="button" class="btn btn-primary">Post</button>
+                    </div>
+                    <i id="post-modal-close" class="uil uil-times close"></i>
+                </div>
+                </div>
+                <!-- feed -->
+                <div id="feeds" class="feeds">
+                    {% include 'posts.html'%}
+
+
+                </div>
+                <div id="loadmore" class="load-more">
+
+                    <button data-post_count="10" onclick="loadmore(event)" class="btn btn-primary">Load more</button>
+                </div>
+        </div>
+        
+        <div id="profile-right" class="right">
+            <div class="photos-container">
+                <h3>Photos</h3>
+                <div class="photos">
+                    <div class="photo">
+                        <img src="{% static 'images/profile-1.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-2.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-3.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-4.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-5.jpg' %}" alt="Photo">
+                    </div>
+                    <div class="photo">
+                        <img src="{% static 'images/profile-6.jpg' %}" alt="Photo">
+                    </div>
+                </div>
+                <a style="margin-top: 0.5rem;" class="btn btn-primary">View all</a>
+            </div>
+            <div class="friends-container">
+                <h3>Friends</h3>
+                <div class="friends">
+                    <a class="friend">
+                        <img src="{% static 'images/profile-7.jpg' %}" alt="Friend">
+                        <p>John Doe</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-8.jpg' %}" alt="Friend">
+                        <p>Nafis Niloy</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-9.jpg' %}" alt="Friend">
+                        <p>Sadman Sakib</p>
+                    </a>
+                    <a class="friend">
+                        <img src="{% static 'images/profile-10.jpg' %}" alt="Friend">
+                        <p>John Abraham</p>
+                    </a>
+
+
+
+                </div>
+                <a style="margin-top: 0.5rem;" class="btn btn-primary">View all</a>
+            </div>
+
+
+
+</main>
+{% endblock %}
